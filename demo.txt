@@ -1,0 +1,13 @@
+pip install fastapi uvicorn jinja2 requests
+uvicorn app:app --reload
+
+
+Folder Structure
+project/
+ ├── app.py
+ └── templates/
+      └── form.html
+
+
+Recaptcha link
+https://www.google.com/recaptcha/admin/create
