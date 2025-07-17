@@ -6,14 +6,18 @@ import requests
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-RECAPTCHA_SECRET_KEY = "YOUR_SECRET_KEY"  # Replace with your secret key
+RECAPTCHA_SECRET_KEY = "SECRET_KEY"  # Replace with your secret key
 
 @app.get("/", response_class=HTMLResponse)
 async def form_page(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/submit")
-async def submit_form(request: Request, name: str = Form(...), g_recaptcha_response: str = Form(...)):
+async def submit_form(
+    request: Request,
+    name: str = Form(...),
+    g_recaptcha_response: str = Form(alias="g-recaptcha-response")
+):
     # Verify reCAPTCHA
     payload = {
         'secret': RECAPTCHA_SECRET_KEY,
@@ -23,6 +27,6 @@ async def submit_form(request: Request, name: str = Form(...), g_recaptcha_respo
     result = r.json()
 
     if result.get("success"):
-        return {"status": "success", "message": f"CAPTCHA Verified. Hello, {name}!"}
+        return {"status": "success", "message": f"✅ CAPTCHA Verified. Hello, {name}!"}
     else:
-        return {"status": "error", "message": "CAPTCHA verification failed."}
+        return {"status": "error", "message": "❌ CAPTCHA verification failed."}
