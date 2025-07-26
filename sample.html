@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Editor with Icons Inside Box</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .editor-wrapper {
+      background: white;
+      width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .toolbar {
+      background: #f7f7f7;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-start;
+    }
+
+    .toolbar button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px;
+      transition: background 0.2s;
+    }
+
+    .toolbar button:hover {
+      background: #e2e6ea;
+      border-radius: 4px;
+    }
+
+    .editor {
+      padding: 20px;
+      min-height: 300px;
+      outline: none;
+    }
+
+    .download-btn {
+      background: #28a745;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .download-btn:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="editor-wrapper">
+    <div class="toolbar">
+      <button onclick="execCmd('bold')" title="Bold">🅱️</button>
+      <button onclick="execCmd('italic')" title="Italic">𝑰</button>
+      <button onclick="execCmd('underline')" title="Underline">U̲</button>
+      <button onclick="execCmd('insertUnorderedList')" title="Bullets">•●</button>
+      <button onclick="execCmd('insertOrderedList')" title="Numbered List">1️⃣</button>
+      <button onclick="execCmd('justifyLeft')" title="Align Left">⬅️</button>
+      <button onclick="execCmd('justifyCenter')" title="Align Center">🔲</button>
+      <button onclick="execCmd('justifyRight')" title="Align Right">➡️</button>
+      <button onclick="addLink()" title="Insert Link">🔗</button>
+    </div>
+
+    <div class="editor" contenteditable="true" id="editor">
+      Start typing here...
+    </div>
+
+    <button class="download-btn" onclick="downloadPDF()">📥 Download as PDF</button>
+  </div>
+
+  <!-- html2pdf library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    function execCmd(command) {
+      document.execCommand(command, false, null);
+    }
+
+    function addLink() {
+      const url = prompt("Enter the URL:");
+      if (url) {
+        document.execCommand("createLink", false, url);
+      }
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById("editor");
+      const opt = {
+        margin:       0.5,
+        filename:     'document.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+  </script>
+
+</body>
+</html>
